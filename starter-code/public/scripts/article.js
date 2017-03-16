@@ -76,13 +76,20 @@ Article.allAuthors = () => {
 };
 
 Article.numWordsByAuthor = () => {
-  return Article.allAuthors().map(author => {
+  return Article.allAuthors().map(name => {
     // DONE TODO: Transform each author string into an object with properties for
     // the author's name, as well as the total number of words across all articles
     // written by the specified author.
+    var sum = 0;
+    for (var i = 0; i < Article.all.length; i++){
+      if(Article.all[i].author === name) {
+        var arr = Article.all[i].body.split(' ');
+        sum += arr.length;
+      }
+    }
     return {
-      author: author,
-      length: author.length
+      name: name,
+      wordsWritten: sum
     }
   })
 };
