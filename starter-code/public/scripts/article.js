@@ -20,11 +20,10 @@ Article.prototype.toHtml = function() {
 
   return template(this);
 };
-
 Article.loadAll = rows => {
   rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
 
-  // TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
+  // DONE/TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
   // is the transformation of one colleciton into another.
 
   /* OLD forEach():
@@ -33,6 +32,10 @@ Article.loadAll = rows => {
 });
 */
 
+  var articleArray =rows.map(function(ele) {
+    return (new Article(ele))
+  });
+  Article.all = articleArray; 
 };
 
 Article.fetchAll = callback => {
@@ -47,10 +50,16 @@ Article.fetchAll = callback => {
 
 // TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
 Article.numWordsAll = () => {
-  return Article.all.map().reduce()
+    console.log('hello');
+  var mapped = Article.all.map(function(){
+    return Article.all.body;
+  })
+  var reduced = mapped.reduce(function(acc, curr) {
+    
+  }, 0);
 };
 
-// TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
+// TODO: Chain together a `map` and a `filter` call to produce an array of unique author names.
 Article.allAuthors = () => {
   return Article.all.map().reduce();
 };
