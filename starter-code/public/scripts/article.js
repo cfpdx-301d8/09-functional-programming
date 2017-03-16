@@ -2,7 +2,7 @@
 
 // REVIEW: Check out all of the functions that we've cleaned up with arrow function syntax.
 
-// TODO: Wrap the entire contents of this file in an IIFE.
+
 // Pass in to the IIFE a module, upon which objects can be attached for later access.
 function Article(opts) {
   // REVIEW: Lets review what's actually happening here, and check out some new syntax!!
@@ -24,14 +24,20 @@ Article.prototype.toHtml = function() {
 Article.loadAll = rows => {
   rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
 
-  // TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
+  rows.map(function (a){
+    Article.all.push(new Article(a));
+  });
+
+
+  // DONE! TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
   // is the transformation of one colleciton into another.
 
-  /* OLD forEach():
-  rawData.forEach(function(ele) {
-  Article.all.push(new Article(ele));
-});
-*/
+
+
+  // rows.forEach(function(ele) {
+  //   Article.all.push(new Article(ele));
+  // });
+
 
 };
 
@@ -45,22 +51,39 @@ Article.fetchAll = callback => {
   )
 };
 
-// TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
+// DONE TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
 Article.numWordsAll = () => {
-  return Article.all.map().reduce()
+  return Article.all.map(function(a){
+    return a.body.split(' ');
+  }).reduce(function(acc, name){
+    return acc + name.length;
+  }, 0);
 };
 
-// TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
+// DONE TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
 Article.allAuthors = () => {
-  return Article.all.map().reduce();
+  var filter = [];
+  var arr = Article.all.map(function(a){
+    return a.author;
+  });
+
+  for (var i = 0; i < arr.length; i++){
+    if (filter.includes(arr[i]) === false) {
+      filter.push(arr[i]);
+    }
+  }
+  return filter;
 };
 
 Article.numWordsByAuthor = () => {
   return Article.allAuthors().map(author => {
-    // TODO: Transform each author string into an object with properties for
+    // DONE TODO: Transform each author string into an object with properties for
     // the author's name, as well as the total number of words across all articles
     // written by the specified author.
-
+    return {
+      author: author,
+      length: author.length
+    }
   })
 };
 

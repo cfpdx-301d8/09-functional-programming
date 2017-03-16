@@ -1,6 +1,6 @@
 'use strict';
 
-// TODO: Wrap the entire contents of this file in an IIFE.
+// DONE TODO: Wrap the entire contents of this file in an IIFE.
 // Pass in to the IIFE a module, upon which objects can be attached for later access.
 var articleView = {};
 
