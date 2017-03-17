@@ -80,9 +80,20 @@ Article.numWordsByAuthor = () => {
         return article.body;
       }
     })
-    return newArray;
+
+    newArray = newArray.map(function(count) {
+      return count.body.split(' ').length;
+    })
+    .reduce(function (acc, curr) {
+      return acc + curr;
+    }, 0);
+
+    return {
+      author: author,
+      numWords: newArray
+    };
   });
-   console.log(newArray);
+  console.log(newArray);
 };
 
 Article.truncateTable = callback => {
