@@ -20,8 +20,10 @@ Article.prototype.toHtml = function() {
 
   return template(this);
 };
+
 Article.loadAll = rows => {
   rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
+  Article.all = rows.map(ele => new Article(ele));
 }
 
   // DONE/TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
@@ -32,8 +34,6 @@ Article.loadAll = rows => {
   Article.all.push(new Article(ele));
 });
 */
-
-Article.all = Article.all.rows.map(ele => new Article(ele));
 
 Article.fetchAll = callback => {
   $.get('/articles')
