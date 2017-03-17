@@ -22,6 +22,7 @@ Article.prototype.toHtml = function() {
 };
 Article.loadAll = rows => {
   rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
+}
 
   // DONE/TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
   // is the transformation of one colleciton into another.
@@ -32,11 +33,7 @@ Article.loadAll = rows => {
 });
 */
 
-  var articleArray =rows.map(function(ele) {
-    return (new Article(ele))
-  });
-  Article.all = articleArray; 
-};
+Article.all = Article.all.rows.map(ele => new Article(ele));
 
 Article.fetchAll = callback => {
   $.get('/articles')
@@ -50,53 +47,34 @@ Article.fetchAll = callback => {
 
 // DONE TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
 Article.numWordsAll = () => {
-  return Article.all.map(function(ele){
-    return ele.body.split(' ');
-  }).reduce(function(acc, curr){
-    return (acc + curr.length);
-  }, 0);
+  return Article.all.map(ele => ele.body.split(' '))
+  .reduce((acc, curr) => (acc + curr.length), 0);
 };
 
 // DONE/TODO: Chain together a `map` and a `filter` call to produce an array of unique author names.
 
-
 Article.allAuthors = () => {
-  return Article.all.map(function(ele){
-    return ele.author;
-  }).filter(function (x, i, a) {
-    var authorArray =  a.indexOf(x) === i;
-    return authorArray;
-  });
+  return Article.all.map(ele => ele.author)
+    .filter(function (ele, i, array) {
+      var authorArray =  array.indexOf(ele) === i;
+      return authorArray;
+    });
 };
+
 Article.numWordsByAuthor = () => {
-  return Article.allAuthors().map(function(author) {
-    let wordCountArticles = Article.all.filter(function(currArticle) {
-      let authorArticles = currArticle.author === author;
-      return authorArticles;
-    }).map(function(ele){
-      return ele.body.split(' ');
-    }).reduce(function(acc, curr){
-      return (acc + curr.length);
-    }, 0);
-    let authorWordObject = {
+  return Article.allAuthors().map(author => {
+    return {
       name: author,
-      wordCount: wordCountArticles
+      wordCount: Article.all
+        .filter(currArticle => currArticle.author === author)
+        .map(ele => ele.body.split(' '))
+        .reduce((acc, curr) => (acc + curr.length), 0)
     }
-    return authorWordObject;
   })
 };
-
-
     // DONE/TODO: Transform each author string into an object with properties for
     // the author's name, as well as the total number of words across all articles
     // written by the specified author.
-
-// return Article.allAuthors().map(function(ele) {
-//     var authorWords = {
-//       name: ele,
-//       wordCount: (Article.all.author)
-//     }
-//     return authorWords;
 
 Article.truncateTable = callback => {
   $.ajax({
