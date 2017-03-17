@@ -27,6 +27,10 @@ Article.loadAll = rows => {
   // TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
   // is the transformation of one colleciton into another.
 
+  Article.all = rows.map(function(article) {
+    return new Article(article);
+  });
+
   /* OLD forEach():
   rawData.forEach(function(ele) {
   Article.all.push(new Article(ele));
@@ -47,12 +51,22 @@ Article.fetchAll = callback => {
 
 // TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
 Article.numWordsAll = () => {
-  return Article.all.map().reduce()
+  return Article.all.map(function(count) {
+    return count.body.split(' ').length;
+  })
+    .reduce(function (acc, curr) {
+      return acc + curr;
+    }, 0);
 };
 
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
 Article.allAuthors = () => {
-  return Article.all.map().reduce();
+  return Article.all.map(function(name) {
+    return name.author;
+  })
+  .filter(function(each, index, array) {
+    return array.indexOf(each) === index;
+  });
 };
 
 Article.numWordsByAuthor = () => {
@@ -61,7 +75,25 @@ Article.numWordsByAuthor = () => {
     // the author's name, as well as the total number of words across all articles
     // written by the specified author.
 
-  })
+    var newArray = Article.all.filter(function(article) {
+      if (author === article.author) {
+        return article.body;
+      }
+    })
+
+    newArray = newArray.map(function(count) {
+      return count.body.split(' ').length;
+    })
+    .reduce(function (acc, curr) {
+      return acc + curr;
+    }, 0);
+
+    return {
+      author: author,
+      numWords: newArray
+    };
+  });
+  console.log(newArray);
 };
 
 Article.truncateTable = callback => {
